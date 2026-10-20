@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".25"/>
+    </linearGradient>
+  </defs>
+  <!-- left swooshes -->
+  <g fill="url(#g)">
+    <path d="M-120 180 C 120 120, 260 260, 230 470 C 205 640, 60 720, -120 760 Z" opacity=".55"/>
+    <path d="M-80 420 C 140 380, 300 520, 250 720 C 210 880, 60 960, -80 990 Z" opacity=".45"/>
+    <path d="M40 60 C 210 40, 330 150, 300 300 C 270 200, 160 130, 40 140 Z" opacity=".6"/>
+  </g>
+  <!-- right swooshes -->
+  <g fill="url(#g)">
+    <path d="M1720 240 C 1480 180, 1340 330, 1370 540 C 1395 710, 1540 790, 1720 820 Z" opacity=".55"/>
+    <path d="M1680 560 C 1460 520, 1300 660, 1350 860 C 1390 1000, 1540 1060, 1680 1080 Z" opacity=".4"/>
+    <path d="M1560 120 C 1390 100, 1270 210, 1300 360 C 1330 260, 1440 190, 1560 200 Z" opacity=".6"/>
+  </g>
+  <!-- soft plus signs -->
+  <g fill="#ffffff" opacity=".55">
+    <path d="M150 840h16v-16h12v16h16v12h-16v16h-12v-16h-16z"/>
+    <path d="M1460 90h12v-12h9v12h12v9h-12v12h-9v-12h-12z"/>
+    <path d="M1500 900h14v-14h10v14h14v10h-14v14h-10v-14h-14z"/>
+  </g>
+</svg>
