@@ -21,6 +21,26 @@ const SITE = {
   address: "อ.สัตหีบ จ.ชลบุรี",
 };
 
+// ===== ป้าย "ใหม่" =====
+// รายการที่ date ไม่เกินกี่วันนับจากวันนี้ จะขึ้นป้าย "ใหม่" ให้เองอัตโนมัติ (ใช้กับ กิจกรรม สื่อความรู้ ประกาศ คลิป)
+// ถ้าอยากบังคับ: ใส่ isNew: true (ขึ้นเสมอ) หรือ isNew: false (ไม่ขึ้นเลย) ในรายการนั้น
+const NEW_DAYS = 14;
+
+// ===== หัวข้อแนะนำ (แถบสีส้มใต้เมนู) =====
+// text: ข้อความที่แสดง · go: กดแล้วไปส่วนไหน
+//   "handhygiene" = การล้างมือ, "sp" = แนวทาง (SP.), "quiz" = แบบฝึกหัด,
+//   "#activities" = กิจกรรมและโครงการ, "#videos" = คลิป, "#announce" = ประกาศ, "#dashboard" = Dashboard
+//   หรือใส่ลิงก์เว็บเต็ม เช่น "https://..."
+const TRENDS = [
+  { text: "#ล้างมือ6ขั้นตอน",       go: "handhygiene" },
+  { text: "#5Moments",            go: "handhygiene" },
+  { text: "#StandardPrecautions", go: "sp" },
+  { text: "#ใส่PPEให้ถูกวิธี",       go: "sp" },
+  { text: "#การจัดการขยะ",         go: "sp" },
+  { text: "#แบบทดสอบความรู้",      go: "quiz" },
+  { text: "#อัตราการติดเชื้อ",       go: "#dashboard" },
+];
+
 // ===== สไลด์ภาพหน้าแรก (เลื่อนได้) =====
 // image: รูปในโฟลเดอร์ assets (แนะนำแนวนอน 16:9 หรือกว้างกว่า)
 // tag / title: ข้อความบนสไลด์ (เว้นว่าง "" ถ้ารูปมีข้อความอยู่แล้ว)
@@ -44,12 +64,12 @@ const ACTIVITIES = [
 ];
 
 // ===== ประกาศ =====
-// date: ปี ค.ศ.-เดือน-วัน · isNew: true = แสดงป้าย "ใหม่" · link: ลิงก์ไฟล์ประกาศ (Google Drive) หรือ "#"
+// date: ปี ค.ศ.-เดือน-วัน (ป้าย "ใหม่" ขึ้นเองตาม NEW_DAYS) · link: ลิงก์ไฟล์ประกาศ (Google Drive) หรือ "#"
 const ANNOUNCEMENTS = [
-  { title: "ประกาศกำหนดการอบรมฟื้นฟูความรู้ IC สำหรับบุคลากรใหม่ ประจำปี 2570", date: "2026-10-18", isNew: true,  link: "#" },
-  { title: "แนวปฏิบัติการคัดกรองผู้ป่วยโรคติดเชื้อทางเดินหายใจ ฉบับปรับปรุง",       date: "2026-10-05", isNew: true,  link: "#" },
-  { title: "ตารางตรวจเยี่ยมหอผู้ป่วย (IC Round) เดือนพฤศจิกายน 2569",              date: "2026-09-28", isNew: false, link: "#" },
-  { title: "ขอเชิญส่งผลงานประกวดสื่อรณรงค์การล้างมือ",                          date: "2026-09-15", isNew: false, link: "#" },
+  { title: "ประกาศกำหนดการอบรมฟื้นฟูความรู้ IC สำหรับบุคลากรใหม่ ประจำปี 2570", date: "2026-10-18",  link: "#" },
+  { title: "แนวปฏิบัติการคัดกรองผู้ป่วยโรคติดเชื้อทางเดินหายใจ ฉบับปรับปรุง",       date: "2026-10-05",  link: "#" },
+  { title: "ตารางตรวจเยี่ยมหอผู้ป่วย (IC Round) เดือนพฤศจิกายน 2569",              date: "2026-09-28", link: "#" },
+  { title: "ขอเชิญส่งผลงานประกวดสื่อรณรงค์การล้างมือ",                          date: "2026-09-15", link: "#" },
 ];
 
 // ===== สื่อความรู้ / แบบฝึกหัด (เดิมชื่อโปสเตอร์ความรู้) =====
@@ -67,13 +87,14 @@ const POSTERS = [
   { title: "แบบทดสอบ Standard Precautions",                 category: "quiz",        type: "QUIZ", date: "2026-09-25", image: "", link: "#" },
 ];
 
+// date: วันที่ลงคลิป ปี ค.ศ.-เดือน-วัน (ใช้คำนวณป้าย "ใหม่" และเรียงลำดับ)
 // youtube: ใส่ลิงก์ YouTube ทั้งลิงก์ได้เลย เช่น "https://www.youtube.com/watch?v=xxxxxxx" (เว้นว่าง "" = ยังไม่มีคลิป)
 const VIDEOS = [
-  { title: "การล้างมือ 7 ขั้นตอน",              category: "handhygiene",  youtube: "" },
-  { title: "การสวมและถอด PPE อย่างถูกวิธี",        category: "sp",           youtube: "" },
-  { title: "การดูแลผู้ป่วยโรคติดต่อทางเดินหายใจ",   category: "sp",           youtube: "" },
-  { title: "การป้องกันการติดเชื้อจากหัตถการ",       category: "sp",           youtube: "" },
-  { title: "5 Moments for Hand Hygiene",       category: "handhygiene",  youtube: "" },
+  { title: "การล้างมือ 7 ขั้นตอน",              category: "handhygiene",  date: "2026-10-15", youtube: "" },
+  { title: "การสวมและถอด PPE อย่างถูกวิธี",        category: "sp",           date: "2026-09-20", youtube: "" },
+  { title: "การดูแลผู้ป่วยโรคติดต่อทางเดินหายใจ",   category: "sp",           date: "2026-09-10", youtube: "" },
+  { title: "การป้องกันการติดเชื้อจากหัตถการ",       category: "sp",           date: "2026-08-30", youtube: "" },
+  { title: "5 Moments for Hand Hygiene",       category: "handhygiene",  date: "2026-08-15", youtube: "" },
 ];
 
 // ตัวเลขแดชบอร์ด (ต่อ 1,000 วันอุปกรณ์) — change = % เปลี่ยนแปลง (ติดลบ = ลดลง)
@@ -244,6 +265,9 @@ svg.i{width:1em;height:1em;flex:none}
 .arow .t{flex:1;font-size:18px;line-height:1.4}
 .arow:hover .t{color:var(--blue)}
 .arow .new{flex:none;font-size:13px;padding:1px 9px;border-radius:5px;background:var(--accent2);color:#fff}
+.newb{position:absolute;right:10px;top:10px;z-index:2;font-size:13px;padding:2px 10px;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 3px 10px rgba(230,62,122,.4);animation:newpulse 2s ease-in-out infinite}
+@keyframes newpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.newb{animation:none}}
 .arow svg{flex:none;color:var(--accent);font-size:20px}
 
 /* footer */
@@ -325,15 +349,7 @@ footer .ct div{display:flex;align-items:center;gap:8px}
   <div class="panel">
     <div class="trend">
       <div class="lab"><i data-i="flame"></i>หัวข้อแนะนำ</div>
-      <div class="tags">
-        <a href="#posters" data-cat="handhygiene">#ล้างมือ7ขั้นตอน</a>
-        <a href="#posters" data-cat="handhygiene">#5Moments</a>
-        <a href="#posters" data-cat="sp">#StandardPrecautions</a>
-        <a href="#posters" data-cat="sp">#ใส่PPEให้ถูกวิธี</a>
-        <a href="#posters" data-cat="sp">#ขยะติดเชื้อ</a>
-        <a href="#posters" data-cat="quiz">#แบบทดสอบความรู้</a>
-        <a href="#dashboard">#อัตราการติดเชื้อ</a>
-      </div>
+      <div class="tags" id="trendTags"></div>
     </div>
 
     <!-- สไลด์ + ข่าว -->
@@ -403,6 +419,14 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const icon = (n, cls="") => `<svg class="i ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${(typeof ICONS!=="undefined"?ICONS:{})[n]||""}</svg>`;
 const paintIcons = root => root.querySelectorAll("i[data-i]").forEach(el => { el.outerHTML = icon(el.dataset.i, el.className); });
+const isNewItem = x => {
+  if (x.isNew === true) return true;
+  if (x.isNew === false || !x.date) return false;
+  const t = new Date(x.date); if (isNaN(t)) return false;
+  const days = (Date.now() - t.getTime()) / 864e5;
+  return days >= -1 && days <= NEW_DAYS;
+};
+const NEWB = x => isNewItem(x) ? '<span class="newb">ใหม่</span>' : '';
 const thDate = d => new Date(d).toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"});
 let docCat = "all", vidCat = "all", query = "";
 
@@ -411,6 +435,14 @@ $("#unitName").textContent = SITE.unit; $("#hospName").textContent = SITE.hospit
 $("#fUnit").textContent = SITE.unit; $("#fHosp").textContent = SITE.hospital;
 $("#fContact").innerHTML = [["phone",SITE.phone],["mail",SITE.email],["map-pin",SITE.address]]
   .filter(x => x[1]).map(([i,t]) => `<div>${icon(i)}${esc(t)}</div>`).join("");
+
+/* ---------- Trend tags ---------- */
+$("#trendTags").innerHTML = TRENDS.map(t => {
+  const g = String(t.go||"");
+  if (["handhygiene","sp","quiz","all"].includes(g)) return `<a href="#posters" data-cat="${g}">${esc(t.text)}</a>`;
+  if (/^https?:/.test(g)) return `<a href="${esc(g)}" target="_blank" rel="noopener">${esc(t.text)}</a>`;
+  return `<a href="${esc(g||"#home")}">${esc(t.text)}</a>`;
+}).join("");
 
 /* ---------- Carousel ---------- */
 (function(){
@@ -450,7 +482,7 @@ $("#annList").innerHTML = ANNOUNCEMENTS.slice().sort((a,b) => b.date.localeCompa
   const d = new Date(a.date);
   return `<a class="arow" href="${esc(a.link)}" target="_blank" rel="noopener">
     <div class="d"><b>${d.getDate()}</b><small>${d.toLocaleDateString("th-TH",{month:"short",year:"2-digit"})}</small></div>
-    <div class="t">${esc(a.title)}</div>${a.isNew?'<span class="new">ใหม่</span>':''}${icon("chevron-right")}</a>`;
+    <div class="t">${esc(a.title)}</div>${isNewItem(a)?'<span class="new">ใหม่</span>':''}${icon("chevron-right")}</a>`;
 }).join("") || `<div class="empty">ยังไม่มีประกาศ</div>`;
 
 /* ---------- Dashboard ---------- */
@@ -484,7 +516,7 @@ function renderActs(){
   $("#actFilters").onclick = e => { const b = e.target.closest(".chip"); if (b){ actType = b.dataset.t; renderActs(); } };
   const list = ACTIVITIES.filter(a => (actType==="all" || a.type===actType) && match(a)).sort((a,b) => b.date.localeCompare(a.date));
   $("#actList").innerHTML = list.length ? list.map(a => `<a class="pcard" href="${esc(a.link)}" target="_blank" rel="noopener">
-      <div class="th ${a.type==="โครงการ"?"sp":"handhygiene"}">${a.image?`<img src="${esc(a.image)}" alt="" loading="lazy">`:icon(a.icon||"sparkles")}<span class="ty">${esc(a.type)}</span></div>
+      <div class="th ${a.type==="โครงการ"?"sp":"handhygiene"}">${a.image?`<img src="${esc(a.image)}" alt="" loading="lazy">`:icon(a.icon||"sparkles")}<span class="ty">${esc(a.type)}</span>${NEWB(a)}</div>
       <div class="m"><span class="chip-o">${esc(a.type)}</span>${icon("clock")}${thDate(a.date)}</div>
       <div class="t">${esc(a.title)}</div></a>`).join("") : `<div class="empty">ยังไม่มีรายการ</div>`;
 }
@@ -497,7 +529,7 @@ function renderDocs(){
   const label = {IMG:"โปสเตอร์", QUIZ:"แบบทดสอบ", PDF:"PDF", PPT:"สไลด์"};
   $("#docList").innerHTML = list.length ? list.map(d => `<a class="pcard" href="${esc(d.link)}" target="_blank" rel="noopener">
       <div class="th ${esc(d.category)}">${d.image ? `<img src="${esc(d.image)}" alt="" loading="lazy">` : icon(d.type==="QUIZ"?"clipboard-check":CAT_ICON[d.category]||"image")}
-        <span class="ty">${label[d.type]||esc(d.type)}</span></div>
+        <span class="ty">${label[d.type]||esc(d.type)}</span>${NEWB(d)}</div>
       <div class="m"><span class="chip-o">${CATS[d.category]||""}</span>${icon("clock")}${thDate(d.date)}</div>
       <div class="t">${esc(d.title)}</div>
     </a>`).join("") : `<div class="empty">ยังไม่มีรายการในหมวดนี้</div>`;
@@ -508,11 +540,11 @@ function ytId(url){ const m = String(url).match(/(?:youtu\.be\/|v=|embed\/|short
 function thumb(v){
   const id = ytId(v.youtube);
   return `<div class="vthumb" ${id?`data-id="${id}" style="background-image:url('https://i.ytimg.com/vi/${id}/hqdefault.jpg')"`:""}>
-    ${id?`<span class="play">${icon("play")}</span>`:`<div class="soon">${icon("clapperboard")}เร็ว ๆ นี้</div>`}</div>`;
+    ${id?`<span class="play">${icon("play")}</span>`:`<div class="soon">${icon("clapperboard")}เร็ว ๆ นี้</div>`}${NEWB(v)}</div>`;
 }
 function renderVids(){
   chips($("#vidFilters"), VIDEOS, vidCat, c => { vidCat = c; renderVids(); });
-  const list = VIDEOS.filter(v => (vidCat==="all" || v.category===vidCat) && match(v));
+  const list = VIDEOS.filter(v => (vidCat==="all" || v.category===vidCat) && match(v)).sort((a,b) => String(b.date||"").localeCompare(String(a.date||"")));
   if (!list.length){ $("#vidList").innerHTML = `<div class="empty">ยังไม่มีคลิปในหมวดนี้</div>`; return; }
   const [f, ...rest] = list;
   $("#vidList").innerHTML = `<div class="vfeat">${thumb(f)}<div class="info"><span class="chip-o">${CATS[f.category]||""}</span><h3 style="margin-top:8px">${esc(f.title)}</h3><p>${icon("video")}คลิปแนะนำ</p></div></div>
