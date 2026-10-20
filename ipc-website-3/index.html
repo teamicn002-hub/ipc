@@ -42,6 +42,12 @@ const TRENDS = [
 ];
 
 // ===== สไลด์ภาพหน้าแรก (เลื่อนได้) =====
+// ★ วิธีง่ายสุด: อัปรูปเข้าโฟลเดอร์ assets ตั้งชื่อเป็นเลข 1.jpg, 2.jpg, 3.jpg ... (หรือ .png)
+//   เว็บดึงเป็นสไลด์เองตามลำดับเลข ไม่ต้องแก้ไฟล์นี้
+//   - เปลี่ยนรูป: อัปรูปใหม่ชื่อเดิมทับ · ลบรูป: ลบไฟล์นั้นใน GitHub · เลขข้ามได้ (เช่น มี 1, 2, 5)
+//   - รองรับเลข 1 ถึง SLIDE_MAX
+const SLIDE_MAX = 20;
+// ถ้าในโฟลเดอร์ assets/slides ไม่มีรูปเลย เว็บจะใช้รายการ SLIDES ด้านล่างแทน (ใส่ข้อความบนสไลด์ได้)
 // image: รูปในโฟลเดอร์ assets (แนะนำแนวนอน 16:9 หรือกว้างกว่า)
 // tag / title: ข้อความบนสไลด์ (เว้นว่าง "" ถ้ารูปมีข้อความอยู่แล้ว)
 // link: กดสไลด์แล้วไปที่ไหน เช่น "#posters" หรือลิงก์เว็บ
@@ -527,7 +533,14 @@ $("#trendTags").innerHTML = TRENDS.map(t => {
 }).join("");
 
 /* ---------- Carousel ---------- */
-(function(){
+function probeImg(src){ return new Promise(r => { const im = new Image(); im.onload = () => r(src); im.onerror = () => r(null); im.src = src; }); }
+async function loadSlides(){
+  const tries = [];
+  for (let i = 1; i <= SLIDE_MAX; i++) tries.push(probeImg(`assets/${i}.jpg`).then(x => x || probeImg(`assets/${i}.png`)).then(x => x || probeImg(`assets/slides/${i}.jpg`)));
+  const found = (await Promise.all(tries)).filter(Boolean);
+  return found.length ? found.map(src => ({ image: src, tag: "", title: "", link: "#activities" })) : SLIDES;
+}
+function buildCarousel(SLIDES){
   const box = $("#slides"), dots = $("#dots"), pp = $("#pp"), car = $("#car");
   const n = SLIDES.length;
   box.innerHTML = SLIDES.map((s,i) => `<a class="slide" href="${esc(s.link||'#')}" aria-label="สไลด์ ${i+1} จาก ${n}">
@@ -557,7 +570,8 @@ $("#trendTags").innerHTML = TRENDS.map(t => {
   document.addEventListener("keydown", e => { if (e.key==="ArrowRight"){go(cur+1);restart();} if (e.key==="ArrowLeft"){go(cur-1);restart();} });
   if (n < 2){ $("#prev").style.display = $("#next").style.display = "none"; }
   setPP(); go(0); restart();
-})();
+}
+loadSlides().then(buildCarousel);
 
 /* ---------- Announcements ---------- */
 $("#annList").innerHTML = ANNOUNCEMENTS.slice().sort((a,b) => b.date.localeCompare(a.date)).map(a => {
